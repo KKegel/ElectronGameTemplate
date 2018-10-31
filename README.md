@@ -5,7 +5,7 @@
 ```
 > cd project
 project> npm install
-project> npm run electron
+project> npm start
 ```
 
 **Note: you need npm, node and maybe yarn on your machine**
