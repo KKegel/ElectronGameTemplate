@@ -12,8 +12,9 @@
     "react-dom": "^16.6.0",
     "react-scripts-ts": "3.1.0",
     "three": "^0.98.0",
+    "typescript": "^3.0.0",
     "wait-on": "^3.1.0",
-    "typescript": "^3.0.0"
+    "whs": "^2.1.9"
   },
   "main": "public/electron.js",
   "scripts": {
