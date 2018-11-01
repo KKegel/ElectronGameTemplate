@@ -1,33 +1,60 @@
-
+import * as WHS from 'whs/build/whs' // Import WHS without typings because type definitions are currently to bad
 import * as THREE from 'three';
 
-const build = () : void => {
 
-  const scene :THREE.Scene = new THREE.Scene();
-  const camera :THREE.PerspectiveCamera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+const build = ()  => {
 
-  const renderer :THREE.WebGLRenderer = new THREE.WebGLRenderer();
-  renderer.setSize( window.innerWidth, window.innerHeight );
-  document.body.appendChild( renderer.domElement );
+  // Create World
+  const world = new WHS.App([
+    new WHS.ElementModule(document.getElementById('WHSAPP')),
+    new WHS.SceneModule(),
+    new WHS.CameraModule({
+      position: new THREE.Vector3(0, 0, 20)
+    }),
+    new WHS.RenderingModule({
+      bgColor: 0x162129,
+      renderer: {
+        antialias: true
+      }
+    }),
+    new WHS.OrbitControlsModule(),
+    new WHS.ResizeModule()
+  ]);
 
-  const geometry :THREE.BoxGeometry = new THREE.BoxGeometry( 1, 1, 1 );
-  const material :THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-  const cube :THREE.Mesh = new THREE.Mesh( geometry, material );
-  scene.add( cube );
+  // Add lights
+  new WHS.AmbientLight({
+    color: 0xAA9999,
+    intensity: 0.4,
+  }).addTo(world);
+  new WHS.DirectionalLight({
+    color: 0x9999BB,
+    intensity: 0.8,
+    position: [5,5,5]
+  }).addTo(world);
 
-  camera.position.z = 5;
+  // Create box component
+  const box = new WHS.Box({ 
+    geometry: {
+      height: 3,
+      width: 3,
+      depth: 3,
+    },
+    material: new THREE.MeshLambertMaterial({
+      color: 0xDD0000
+    }),
+    position: [0,0,0]
+  });
+  // And add the box to world
+  box.addTo(world); 
 
-  const animate = () => {
-    requestAnimationFrame( animate );
+  // Define a simple animation loop
+  new WHS.Loop(() => {
+    box.rotation.y += 0.005;
+    box.rotation.x += 0.002;
+  }).start(world);
 
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
-
-    renderer.render( scene, camera );
-  };
-
-  animate();
-
+  // Launch the rocket!!!
+  world.start()
 }
 
 export default build;
